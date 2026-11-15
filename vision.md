@@ -19,7 +19,7 @@ Personal tool, single user.
   - power cost = time × (power × price per kWh / 60)
   - material cost = grams × filament price per gram
   - cost per piece = power + material
-  - price per piece = cost per piece × margin
+  - price per piece = cost per piece × (1 + margin %)
   - line total = price per piece × amount, plus BTW
 - **Quote output** that is easy to copy or screenshot. A toggle switches between:
   - *Prices only* (model, amount, price per piece, total incl. BTW), with costs and margin hidden

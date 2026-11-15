@@ -1,12 +1,8 @@
-// Settings panel: electricity price, printer power, margin, BTW, and the
-// list of filaments. Renders into #settings.
 var PPC = window.PPC || {};
 
 PPC.settings = {
   root: null,
 
-  // One row per setting: key in state.settings, label, unit shown after the
-  // input, and an optional one-line hint under the label.
   FIELDS: [
     { key: 'pricePerKwh', label: 'Electricity price', unit: '€ / kWh' },
     { key: 'printerKw', label: 'Printer power', unit: 'kW' },
@@ -14,10 +10,9 @@ PPC.settings = {
       key: 'wastePercent',
       label: 'Waste & failed prints',
       unit: '% extra material',
-      hint: 'Typical: 5% reliable, 10–15% with supports, 20%+ multicolour',
     },
-    { key: 'margin', label: 'Margin', unit: '×', hint: '1.4 = 40% on top of cost' },
-    { key: 'vatPercent', label: 'BTW', unit: '%' },
+    { key: 'marginPercent', label: 'Margin', unit: '% on top of cost' },
+    { key: 'vatPercent', label: 'VAT', unit: '%' },
   ],
 
   init() {

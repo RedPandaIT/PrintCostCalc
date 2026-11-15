@@ -22,7 +22,7 @@ visitor's own browser, so the hosted page starts empty for everyone.
 ```
 power cost    = minutes × printer kW × price per kWh ÷ 60
 material cost = grams × filament price per kg ÷ 1000
-price each    = (power + material) × margin
+price each    = (power + material) × (1 + margin %)
 line total    = price each × amount
 quote total   = sum of line totals + BTW
 ```
