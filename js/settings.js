@@ -5,13 +5,19 @@ var PPC = window.PPC || {};
 PPC.settings = {
   root: null,
 
-  // One entry per setting: key in state.settings, label shown to the user.
+  // One row per setting: key in state.settings, label, unit shown after the
+  // input, and an optional one-line hint under the label.
   FIELDS: [
-    { key: 'pricePerKwh', label: 'Electricity price (€ / kWh)' },
-    { key: 'printerKw', label: 'Printer power (kW)' },
-    { key: 'wastePercent', label: 'Waste & failed prints (% extra material)' },
-    { key: 'margin', label: 'Margin (1.4 = +40%)' },
-    { key: 'vatPercent', label: 'BTW (%)' },
+    { key: 'pricePerKwh', label: 'Electricity price', unit: '€ / kWh' },
+    { key: 'printerKw', label: 'Printer power', unit: 'kW' },
+    {
+      key: 'wastePercent',
+      label: 'Waste & failed prints',
+      unit: '% extra material',
+      hint: 'Typical: 5% reliable, 10–15% with supports, 20%+ multicolour',
+    },
+    { key: 'margin', label: 'Margin', unit: '×', hint: '1.4 = 40% on top of cost' },
+    { key: 'vatPercent', label: 'BTW', unit: '%' },
   ],
 
   init() {
@@ -51,11 +57,16 @@ PPC.settings = {
     const { settings, filaments } = PPC.store.state;
     const esc = PPC.format.esc;
 
-    const fields = this.FIELDS.map(
+    const settingRows = this.FIELDS.map(
       (f) => `
-        <label class="field">${f.label}
-          <input data-setting="${f.key}" inputmode="decimal" value="${esc(settings[f.key])}">
-        </label>`
+        <tr>
+          <td>
+            <label for="setting-${f.key}">${f.label}</label>
+            ${f.hint ? `<div class="hint">${f.hint}</div>` : ''}
+          </td>
+          <td><input id="setting-${f.key}" data-setting="${f.key}" inputmode="decimal" value="${esc(settings[f.key])}"></td>
+          <td class="unit">${f.unit}</td>
+        </tr>`
     ).join('');
 
     const rows = filaments
@@ -70,10 +81,7 @@ PPC.settings = {
       .join('');
 
     this.root.innerHTML = `
-      <div class="settings-grid">${fields}</div>
-      <p class="muted">Waste buffer: extra material added to every print for failed prints, purge
-        and supports. Rule of thumb: about 5% for a reliable single-colour printer, 10–15% with
-        lots of supports, 20% or more for multicolour. Set 0 to turn it off.</p>
+      <table class="settings-table"><tbody>${settingRows}</tbody></table>
       <p class="muted">Changes apply to new quotes. An existing quote keeps the prices it was
         made with until you click "Recalculate" in that quote.</p>
       <h3>Filaments</h3>
