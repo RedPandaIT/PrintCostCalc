@@ -19,11 +19,12 @@ var PPC = window.PPC || {};
     { head: 'Filament', cell: (r) => (r.filament ? r.filament.name : '') },
     { head: 'Time', num: true, cell: (r) => f.duration(r.minutes) },
     { head: 'Grams', num: true, cell: (r) => r.grams },
-    // Material + Power + Overhead + Markup = Price each
+    // Material + Power + Overhead + Markup + Handling = Price each
     { head: 'Material', num: true, cell: (r) => f.money(r.baseMaterialCost) },
     { head: 'Power', num: true, cell: (r) => f.money(r.powerCost) },
     { head: 'Overhead', num: true, cell: (r) => f.money(r.overheadCost) },
     { head: 'Markup', num: true, cell: (r) => f.money(r.markupCost) },
+    { head: 'Handling', num: true, cell: (r) => f.money(r.handlingCost) },
     { head: 'Price each', num: true, cell: (r) => f.money(r.priceEach) },
     { head: 'Total', num: true, cell: (r) => f.money(r.total) },
   ];
@@ -102,7 +103,7 @@ var PPC = window.PPC || {};
           <thead><tr>${head}</tr></thead>
           <tbody>${body}</tbody>
           <tfoot>
-            ${result.fee ? footRow('Labour / setup fee', result.fee) : ''}
+            ${result.fee ? footRow('Handling fee', result.fee) : ''}
             ${footRow('Subtotal (excl. BTW)', result.subtotal)}
             ${footRow('BTW ' + settings.vatPercent + '%', result.vat)}
             ${footRow('Total incl. BTW', result.total, 'grand')}
