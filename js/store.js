@@ -2,9 +2,9 @@
 //
 //   {
 //     settings:       { pricePerKwh, printerKw, wearPerHour, printerCost, payoffHours,
-//                       wastePercent, markupPercent, vatPercent },
+//                       wastePercent, markupPercent, labourFee, vatPercent },
 //     filaments:      [ { id, name, pricePerKg } ],
-//     quotes:         [ { id, name, createdAt, sentAt, showBreakdown, lines: [...], pricing } ],
+//     quotes:         [ { id, name, createdAt, sentAt, fee, showBreakdown, lines: [...], pricing } ],
 //     currentQuoteId: id of the quote being edited
 //   }
 //
@@ -24,7 +24,9 @@ var PPC = window.PPC || {};
 PPC.store = {
   KEY: 'ppc.v1',
   state: null,
-  HELPER_KEYS: ['printerCost', 'payoffHours'],
+  // Settings that don't change a price by themselves (so no "prices differ" banner):
+  // the wear helpers, and the default for a new quote's labour / setup fee.
+  HELPER_KEYS: ['printerCost', 'payoffHours', 'labourFee'],
 
   uid() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -40,6 +42,7 @@ PPC.store = {
         payoffHours: 0,
         wastePercent: 10,
         markupPercent: 40,
+        labourFee: 0,
         vatPercent: 21,
       },
       filaments: [{ id: this.uid(), name: 'PLA', pricePerKg: 13.99 }],
@@ -137,6 +140,7 @@ PPC.store = {
       name: '',
       createdAt: new Date().toISOString(),
       sentAt: null,
+      fee: String(this.state.settings.labourFee || ''), // labour / setup fee, starts at the default
       showBreakdown: false,
       lines: [this.newLine(null)],
       pricing: this.snapshotPricing(),
@@ -202,7 +206,7 @@ PPC.store = {
   pricingDiffers(quote) {
     const frozen = quote.pricing;
     const now = this.state;
-    // printerCost / payoffHours only help to suggest a wear value; they don't price anything.
+    // HELPER_KEYS settings don't price anything by themselves.
     const priced = Object.keys(now.settings).filter((k) => !this.HELPER_KEYS.includes(k));
     if (priced.some((key) => now.settings[key] !== frozen.settings[key])) {
       return true;

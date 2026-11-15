@@ -5,6 +5,7 @@
 //   material cost = grams * (filament price per kg / 1000) * (1 + waste %)
 //   price each    = (power + wear + material) * (1 + markup %)
 //   line total    = price each * amount
+//   subtotal      = sum of line totals + labour / setup fee (a fixed fee, no markup)
 //   quote total   = subtotal + BTW
 // The settings and filament prices come from each quote's own snapshot.
 var PPC = window.PPC || {};
@@ -80,8 +81,9 @@ PPC.calc = {
       const filament = filaments.find((f) => f.id === line.filamentId);
       return this.line(line, settings, filament);
     });
-    const subtotal = lines.reduce((sum, l) => sum + l.total, 0);
+    const fee = this.num(quote.fee);
+    const subtotal = lines.reduce((sum, l) => sum + l.total, 0) + fee;
     const vat = (subtotal * settings.vatPercent) / 100;
-    return { lines, subtotal, vat, total: subtotal + vat };
+    return { lines, fee, subtotal, vat, total: subtotal + vat };
   },
 };

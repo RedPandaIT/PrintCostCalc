@@ -48,6 +48,7 @@ PPC.app = {
     const current = PPC.store.currentQuote();
     if (PPC.store.isBlank(current)) {
       PPC.store.recalculate(current);
+      current.fee = String(PPC.store.state.settings.labourFee || '');
     } else {
       PPC.store.addQuote();
     }
