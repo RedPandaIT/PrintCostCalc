@@ -9,6 +9,7 @@ PPC.settings = {
   FIELDS: [
     { key: 'pricePerKwh', label: 'Electricity price (€ / kWh)' },
     { key: 'printerKw', label: 'Printer power (kW)' },
+    { key: 'wastePercent', label: 'Waste & failed prints (% extra material)' },
     { key: 'margin', label: 'Margin (1.4 = +40%)' },
     { key: 'vatPercent', label: 'BTW (%)' },
   ],
@@ -70,6 +71,9 @@ PPC.settings = {
 
     this.root.innerHTML = `
       <div class="settings-grid">${fields}</div>
+      <p class="muted">Waste buffer: extra material added to every print for failed prints, purge
+        and supports. Rule of thumb: about 5% for a reliable single-colour printer, 10–15% with
+        lots of supports, 20% or more for multicolour. Set 0 to turn it off.</p>
       <p class="muted">Changes apply to new quotes. An existing quote keeps the prices it was
         made with until you click "Recalculate" in that quote.</p>
       <h3>Filaments</h3>
