@@ -1,7 +1,7 @@
 // App data + local storage. Owns PPC.store.state, the single source of truth:
 //
 //   {
-//     settings:       { pricePerKwh, printerKw, margin, vatPercent },
+//     settings:       { pricePerKwh, printerKw, wastePercent, margin, vatPercent },
 //     filaments:      [ { id, name, pricePerKg } ],
 //     quotes:         [ { id, name, createdAt, showBreakdown, lines: [...], pricing } ],
 //     currentQuoteId: id of the quote being edited
@@ -26,7 +26,7 @@ PPC.store = {
 
   defaults() {
     return {
-      settings: { pricePerKwh: 0.3, printerKw: 0.15, margin: 1.4, vatPercent: 21 },
+      settings: { pricePerKwh: 0.3, printerKw: 0.15, wastePercent: 10, margin: 1.4, vatPercent: 21 },
       filaments: [{ id: this.uid(), name: 'PLA', pricePerKg: 13.99 }],
       quotes: [],
       currentQuoteId: null,
@@ -40,11 +40,14 @@ PPC.store = {
     const state = { ...defaults, ...saved, settings: { ...defaults.settings, ...saved.settings } };
 
     // Quotes saved before pricing snapshots existed get one from the current prices.
+    // A saved quote without a waste buffer was made before that setting existed,
+    // so it gets 0% (its total must not change); only new quotes get the default.
     state.quotes.forEach((quote) => {
       if (this.isValidPricing(quote.pricing)) {
-        quote.pricing.settings = { ...defaults.settings, ...quote.pricing.settings };
+        quote.pricing.settings = { ...defaults.settings, wastePercent: 0, ...quote.pricing.settings };
       } else {
         quote.pricing = { ...this.snapshotPricing(state), at: quote.createdAt };
+        quote.pricing.settings.wastePercent = 0;
       }
     });
     return state;
