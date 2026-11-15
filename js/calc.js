@@ -1,7 +1,7 @@
 // Cost calculation. Pure functions: no DOM, no storage.
 // Same logic as the original spreadsheet:
 //   power cost    = minutes * printer kW * price per kWh / 60
-//   material cost = grams * (filament price per kg / 1000)
+//   material cost = grams * (filament price per kg / 1000) * (1 + waste %)
 //   price each    = (power + material) * margin
 //   line total    = price each * amount
 //   quote total   = subtotal + BTW
@@ -44,7 +44,9 @@ PPC.calc = {
     const amount = this.num(line.amount);
 
     const powerCost = (minutes * settings.printerKw * settings.pricePerKwh) / 60;
-    const materialCost = filament ? (grams * filament.pricePerKg) / 1000 : 0;
+    // The waste buffer covers failed prints, purge and supports.
+    const wasteFactor = 1 + (settings.wastePercent || 0) / 100;
+    const materialCost = filament ? ((grams * filament.pricePerKg) / 1000) * wasteFactor : 0;
     const cost = powerCost + materialCost;
     const priceEach = cost * settings.margin;
 
