@@ -70,6 +70,8 @@ PPC.settings = {
 
     this.root.innerHTML = `
       <div class="settings-grid">${fields}</div>
+      <p class="muted">Changes apply to new quotes. An existing quote keeps the prices it was
+        made with until you click "Recalculate" in that quote.</p>
       <h3>Filaments</h3>
       <table class="filaments">
         <thead><tr><th>Name</th><th>Price (€ / kg)</th><th></th></tr></thead>
