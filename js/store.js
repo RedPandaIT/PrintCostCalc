@@ -1,7 +1,8 @@
 // App data + local storage. Owns PPC.store.state, the single source of truth:
 //
 //   {
-//     settings:       { pricePerKwh, printerKw, wastePercent, marginPercent, vatPercent },
+//     settings:       { pricePerKwh, printerKw, wearPerHour, printerCost, payoffHours,
+//                       wastePercent, marginPercent, vatPercent },
 //     filaments:      [ { id, name, pricePerKg } ],
 //     quotes:         [ { id, name, createdAt, sentAt, showBreakdown, lines: [...], pricing } ],
 //     currentQuoteId: id of the quote being edited
@@ -23,6 +24,7 @@ var PPC = window.PPC || {};
 PPC.store = {
   KEY: 'ppc.v1',
   state: null,
+  HELPER_KEYS: ['printerCost', 'payoffHours'],
 
   uid() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -30,7 +32,16 @@ PPC.store = {
 
   defaults() {
     return {
-      settings: { pricePerKwh: 0.3, printerKw: 0.15, wastePercent: 10, marginPercent: 40, vatPercent: 21 },
+      settings: {
+        pricePerKwh: 0.3,
+        printerKw: 0.15,
+        wearPerHour: 0,
+        printerCost: 0,
+        payoffHours: 0,
+        wastePercent: 10,
+        marginPercent: 40,
+        vatPercent: 21,
+      },
       filaments: [{ id: this.uid(), name: 'PLA', pricePerKg: 13.99 }],
       quotes: [],
       currentQuoteId: null,
@@ -61,10 +72,11 @@ PPC.store = {
     state.quotes.forEach((quote) => {
       if (this.isValidPricing(quote.pricing)) {
         const frozen = this.upgradeSettings(quote.pricing.settings);
-        quote.pricing.settings = { ...defaults.settings, wastePercent: 0, ...frozen };
+        quote.pricing.settings = { ...defaults.settings, wastePercent: 0, wearPerHour: 0, ...frozen };
       } else {
         quote.pricing = { ...this.snapshotPricing(state), at: quote.createdAt };
         quote.pricing.settings.wastePercent = 0;
+        quote.pricing.settings.wearPerHour = 0;
       }
     });
     return state;
@@ -188,7 +200,9 @@ PPC.store = {
   pricingDiffers(quote) {
     const frozen = quote.pricing;
     const now = this.state;
-    if (Object.keys(now.settings).some((key) => now.settings[key] !== frozen.settings[key])) {
+    // printerCost / payoffHours only help to suggest a wear value; they don't price anything.
+    const priced = Object.keys(now.settings).filter((k) => !this.HELPER_KEYS.includes(k));
+    if (priced.some((key) => now.settings[key] !== frozen.settings[key])) {
       return true;
     }
     return quote.lines.some((line) => {

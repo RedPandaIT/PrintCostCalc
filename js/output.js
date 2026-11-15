@@ -21,6 +21,7 @@ var PPC = window.PPC || {};
     { head: 'Grams', num: true, cell: (r) => r.grams },
     { head: 'Material', num: true, cell: (r) => f.money(r.materialCost) },
     { head: 'Power', num: true, cell: (r) => f.money(r.powerCost) },
+    { head: 'Wear', num: true, cell: (r) => f.money(r.wearCost) },
     { head: 'Price each', num: true, cell: (r) => f.money(r.priceEach) },
     { head: 'Total', num: true, cell: (r) => f.money(r.total) },
   ];
