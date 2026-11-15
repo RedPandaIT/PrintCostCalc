@@ -25,6 +25,7 @@ Personal tool, single user.
   - *Prices only* (model, amount, price per piece, total incl. BTW), with costs and margin hidden
   - *Full breakdown* (also shows material, power and time costs)
 - **Quote history.** Past quotes are saved (local storage) for my own reference and can be reopened. Each one can be deleted with a single click, no confirmation. A "new quote" button starts a fresh quote.
+- **Sent quotes.** A quote follows the current settings and filament prices until I mark it as "Sent"; from then on its prices are frozen (with a "recalculate" button). Sent quotes show a badge in the history.
 
 ## Out of scope (for now)
 - Business name / branding / quote notes

@@ -29,7 +29,9 @@ PPC.history = {
         <li data-id="${quote.id}" class="history-item${active}">
           <button class="history-open">
             <span class="history-name">${f.esc(quote.name || 'Untitled quote')}</span>
-            <small>${f.date(quote.createdAt)} · ${f.money(total)}</small>
+            <small>${f.date(quote.createdAt)} · ${f.money(total)}${
+              PPC.store.isSent(quote) ? ' · <span class="badge">Sent</span>' : ''
+            }</small>
           </button>
           <button class="icon" data-action="delete-quote" title="Delete quote">×</button>
         </li>`;
