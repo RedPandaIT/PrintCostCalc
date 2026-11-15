@@ -69,6 +69,7 @@ PPC.backup = {
   restore(state) {
     PPC.store.state = state;
     PPC.store.ensureCurrentQuote();
+    PPC.store.refreshUnsent();
     PPC.store.save();
     PPC.settings.render();
     PPC.app.renderAll();

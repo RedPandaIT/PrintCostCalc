@@ -3,7 +3,7 @@
 //   {
 //     settings:       { pricePerKwh, printerKw, wastePercent, marginPercent, vatPercent },
 //     filaments:      [ { id, name, pricePerKg } ],
-//     quotes:         [ { id, name, createdAt, showBreakdown, lines: [...], pricing } ],
+//     quotes:         [ { id, name, createdAt, sentAt, showBreakdown, lines: [...], pricing } ],
 //     currentQuoteId: id of the quote being edited
 //   }
 //
@@ -14,6 +14,10 @@
 // of the settings and filament prices it was made with. Calculations use that
 // copy, so changing settings or filament prices later doesn't alter old quotes.
 // "Recalculate" in the editor replaces the snapshot with the current prices.
+//
+// That freezing only applies to quotes marked as sent (`sentAt` is a date).
+// A quote that has not been sent yet follows the current prices: refreshUnsent()
+// updates its snapshot whenever settings or filament prices change.
 var PPC = window.PPC || {};
 
 PPC.store = {
@@ -83,6 +87,7 @@ PPC.store = {
     }
     this.state = this.normalize(saved);
     this.ensureCurrentQuote();
+    this.refreshUnsent();
   },
 
   save() {
@@ -117,6 +122,7 @@ PPC.store = {
       id: this.uid(),
       name: '',
       createdAt: new Date().toISOString(),
+      sentAt: null,
       showBreakdown: false,
       lines: [this.newLine(null)],
       pricing: this.snapshotPricing(),
@@ -152,6 +158,23 @@ PPC.store = {
       }
     });
     quote.pricing = fresh;
+  },
+
+  isSent(quote) {
+    return !!quote.sentAt;
+  },
+
+  // Marking as sent freezes the prices; un-marking lets them follow the current ones again.
+  setSent(quote, sent) {
+    quote.sentAt = sent ? new Date().toISOString() : null;
+    if (!sent) this.refreshUnsent();
+  },
+
+  // Quotes that are not sent yet always use the current prices.
+  refreshUnsent() {
+    this.state.quotes.forEach((quote) => {
+      if (!this.isSent(quote) && this.pricingDiffers(quote)) this.recalculate(quote);
+    });
   },
 
   // A filament picked for a line must have a price in the quote's snapshot.

@@ -29,6 +29,7 @@ PPC.app = {
   },
 
   update() {
+    PPC.store.refreshUnsent();
     PPC.store.save();
     PPC.history.render();
     PPC.output.render();
