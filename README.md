@@ -4,6 +4,8 @@ Personal tool to price 3D prints. Enter the slicer values (time, grams,
 filament), get a cost breakdown and a quote to copy or screenshot for a
 customer. See `vision.md` for the idea behind it.
 
+**Live page: https://redpandait.github.io/PrintCostCalc/**
+
 ## Run it
 
 Open `index.html` in a browser. There is no build step and no server. Data is
