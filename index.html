@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Print Price Calculator</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- In the head so the theme is applied before the page paints (no flash). -->
+    <script src="js/theme.js"></script>
   </head>
   <body>
     <div class="layout">
@@ -15,7 +17,10 @@
       </aside>
 
       <main class="main">
-        <h1>Print Price Calculator</h1>
+        <div class="top">
+          <h1>Print Price Calculator</h1>
+          <button id="theme-toggle"></button>
+        </div>
 
         <section class="panel">
           <h2>Quote</h2>

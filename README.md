@@ -22,6 +22,7 @@ visitor's own browser, so the hosted page starts empty for everyone.
 ```
 index.html        page structure + script tags (order matters)
 css/style.css     all styling
+js/theme.js       light/dark mode toggle (loaded in <head>)
 js/format.js      money / date / duration formatting, HTML escaping
 js/calc.js        cost calculation (pure functions, no DOM)
 js/store.js       app data (PPC.store.state) + local storage
