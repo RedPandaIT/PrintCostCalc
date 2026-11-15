@@ -17,13 +17,13 @@ PPC.history = {
   },
 
   render() {
-    const { quotes, currentQuoteId, settings, filaments } = PPC.store.state;
+    const { quotes, currentQuoteId } = PPC.store.state;
     const f = PPC.format;
 
     this.root.innerHTML = [...quotes]
       .reverse()
       .map((quote) => {
-        const total = PPC.calc.quote(quote, settings, filaments).total;
+        const total = PPC.calc.quote(quote).total;
         const active = quote.id === currentQuoteId ? ' active' : '';
         return `
         <li data-id="${quote.id}" class="history-item${active}">

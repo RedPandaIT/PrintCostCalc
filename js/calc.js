@@ -5,6 +5,7 @@
 //   price each    = (power + material) * margin
 //   line total    = price each * amount
 //   quote total   = subtotal + BTW
+// The settings and filament prices come from each quote's own snapshot.
 var PPC = window.PPC || {};
 
 PPC.calc = {
@@ -61,7 +62,9 @@ PPC.calc = {
   },
 
   // Costs for a whole quote: per-line results plus subtotal, BTW and total.
-  quote(quote, settings, filaments) {
+  // Uses the quote's own frozen prices (quote.pricing), not the current settings.
+  quote(quote) {
+    const { settings, filaments } = quote.pricing;
     const lines = quote.lines.map((line) => {
       const filament = filaments.find((f) => f.id === line.filamentId);
       return this.line(line, settings, filament);

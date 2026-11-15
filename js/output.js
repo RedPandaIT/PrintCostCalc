@@ -47,9 +47,9 @@ var PPC = window.PPC || {};
     },
 
     render() {
-      const { settings, filaments } = PPC.store.state;
       const quote = PPC.store.currentQuote();
-      const result = PPC.calc.quote(quote, settings, filaments);
+      const { settings } = quote.pricing;
+      const result = PPC.calc.quote(quote);
 
       this.toggle.checked = quote.showBreakdown;
 

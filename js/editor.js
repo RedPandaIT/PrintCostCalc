@@ -20,6 +20,7 @@ PPC.editor = {
       if (row) {
         const line = quote.lines.find((l) => l.id === row.dataset.line);
         line[field] = e.target.value;
+        if (field === 'filamentId') PPC.store.ensureFilamentPriced(quote, line.filamentId);
       } else {
         quote[field] = e.target.value;
       }
@@ -35,6 +36,10 @@ PPC.editor = {
         this.render();
         PPC.app.update();
         this.root.querySelector('tr[data-line]:last-child input').focus();
+      } else if (action === 'recalculate') {
+        PPC.store.recalculate(quote);
+        this.render();
+        PPC.app.update();
       } else if (action === 'remove-line') {
         const id = e.target.closest('tr').dataset.line;
         quote.lines = quote.lines.filter((l) => l.id !== id);
@@ -47,15 +52,26 @@ PPC.editor = {
 
   render() {
     const quote = PPC.store.currentQuote();
-    const filaments = PPC.store.state.filaments;
     const esc = PPC.format.esc;
+
+    // Dropdown choices: the current filaments, plus filaments that were deleted
+    // but are still used by a line (their price lives on in the quote).
+    const current = PPC.store.state.filaments;
+    const usedIds = new Set(quote.lines.map((l) => l.filamentId));
+    const removed = quote.pricing.filaments.filter(
+      (f) => usedIds.has(f.id) && !current.some((c) => c.id === f.id)
+    );
+    const choices = [
+      ...current.map((f) => ({ id: f.id, name: f.name || '(unnamed)' })),
+      ...removed.map((f) => ({ id: f.id, name: (f.name || '(unnamed)') + ' (removed)' })),
+    ];
 
     const rows = quote.lines
       .map((line) => {
-        const options = filaments
+        const options = choices
           .map(
-            (f) =>
-              `<option value="${f.id}"${f.id === line.filamentId ? ' selected' : ''}>${esc(f.name || '(unnamed)')}</option>`
+            (c) =>
+              `<option value="${c.id}"${c.id === line.filamentId ? ' selected' : ''}>${esc(c.name)}</option>`
           )
           .join('');
 
@@ -74,6 +90,11 @@ PPC.editor = {
       .join('');
 
     this.root.innerHTML = `
+      <div class="notice" id="pricing-notice" hidden>
+        <span>This quote uses the prices from <strong id="pricing-date"></strong>, which differ
+          from your current settings.</span>
+        <button data-action="recalculate">Recalculate with current prices</button>
+      </div>
       <label class="field">Customer / reference
         <input data-field="name" value="${esc(quote.name)}" placeholder="optional">
       </label>
@@ -97,13 +118,16 @@ PPC.editor = {
 
   // Update the computed cells and the "invalid input" highlights.
   refreshTotals() {
-    const { settings, filaments } = PPC.store.state;
     const quote = PPC.store.currentQuote();
-    const quoteResult = PPC.calc.quote(quote, settings, filaments);
+    const quoteResult = PPC.calc.quote(quote);
     const results = quoteResult.lines;
     const money = PPC.format.money.bind(PPC.format);
 
     this.root.querySelector('#editor-total').textContent = money(quoteResult.total);
+
+    // Banner: only shown when the frozen prices differ from the current ones.
+    this.root.querySelector('#pricing-notice').hidden = !PPC.store.pricingDiffers(quote);
+    this.root.querySelector('#pricing-date').textContent = PPC.format.date(quote.pricing.at);
 
     this.root.querySelectorAll('tr[data-line]').forEach((row, i) => {
       const line = quote.lines[i];
