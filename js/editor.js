@@ -79,8 +79,8 @@ PPC.editor = {
         <tr data-line="${line.id}">
           <td><input data-field="model" value="${esc(line.model)}" placeholder="Model name"></td>
           <td><input data-field="amount" class="narrow" inputmode="numeric" value="${esc(line.amount)}"></td>
-          <td><input data-field="time" class="narrow" value="${esc(line.time)}" placeholder="5h 25m"></td>
-          <td><input data-field="grams" class="narrow" inputmode="decimal" value="${esc(line.grams)}" placeholder="g"></td>
+          <td><input data-field="time" class="narrow" value="${esc(line.time)}" placeholder="1h 10m"></td>
+          <td><input data-field="grams" class="narrow" inputmode="decimal" value="${esc(line.grams)}" placeholder="10g"></td>
           <td><select data-field="filamentId"><option value="">—</option>${options}</select></td>
           <td><input data-field="handling" class="narrow" inputmode="decimal" value="${esc(line.handling || '')}" placeholder="0"></td>
           <td class="num each"></td>
@@ -102,7 +102,7 @@ PPC.editor = {
       <div class="table-wrap">
         <table class="lines">
           <thead><tr>
-            <th>Model</th><th>Amount</th><th>Time</th><th>Grams</th><th>Filament</th><th>Handling €/pc</th>
+            <th>Model</th><th>Quantity</th><th>Time</th><th>Grams</th><th>Filament</th><th>Handling €/pc</th>
             <th class="num">Price each</th><th class="num">Line total</th><th></th>
           </tr></thead>
           <tbody>${rows}</tbody>
@@ -112,10 +112,10 @@ PPC.editor = {
         <button data-action="add-line">+ Add line</button>
         <div class="summary"><span>Total incl. BTW</span><strong id="editor-total"></strong></div>
       </div>
-      <label class="field fee">Handling fee for the whole order (€, excl. BTW)
-        <input data-field="handlingFee" class="narrow" inputmode="decimal" value="${esc(quote.handlingFee)}" placeholder="0">
+      <label class="field fee">Handling fee: &nbsp;
+        € <input data-field="handlingFee" class="narrow" inputmode="decimal" value="${esc(quote.handlingFee)}" placeholder="0">
       </label>
-      <p class="muted">Prices excl. BTW. Time accepts "5h 25m", "5:25" or minutes.</p>`;
+      `;
 
     this.refreshTotals();
   },

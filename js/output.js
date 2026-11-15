@@ -8,7 +8,7 @@ var PPC = window.PPC || {};
   // Which columns each view shows. `cell` gets (calcResult, quoteLine).
   const SIMPLE_COLUMNS = [
     { head: 'Model', cell: (r, l) => l.model || '(unnamed)' },
-    { head: 'Amount', num: true, cell: (r) => r.amount },
+    { head: 'Quantity', num: true, cell: (r) => r.amount },
     { head: 'Price each', num: true, cell: (r) => f.money(r.priceEach) },
     { head: 'Total', num: true, cell: (r) => f.money(r.total) },
   ];
