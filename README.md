@@ -17,25 +17,6 @@ Published with GitHub Pages by `.github/workflows/pages.yml`: every push to
 `main` deploys `index.html`, `css/` and `js/`. Your data stays in each
 visitor's own browser, so the hosted page starts empty for everyone.
 
-## Code layout
-
-```
-index.html        page structure + script tags (order matters)
-css/style.css     all styling
-js/theme.js       light/dark mode toggle (loaded in <head>)
-js/format.js      money / date / duration formatting, HTML escaping
-js/calc.js        cost calculation (pure functions, no DOM)
-js/store.js       app data (PPC.store.state) + local storage
-js/settings.js    settings + filament list panel
-js/editor.js      quote editor table
-js/output.js      customer quote + copy button
-js/history.js     history sidebar
-js/app.js         starts everything, decides what re-renders
-```
-
-Each file hangs its code on one global `PPC` object (`PPC.calc`, `PPC.store`,
-...) instead of using ES modules, because modules don't load from `file://`.
-
 ## Calculation
 
 ```
