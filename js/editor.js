@@ -86,7 +86,10 @@ PPC.editor = {
           <tbody>${rows}</tbody>
         </table>
       </div>
-      <button data-action="add-line">+ Add line</button>
+      <div class="editor-foot">
+        <button data-action="add-line">+ Add line</button>
+        <div class="summary"><span>Total incl. BTW</span><strong id="editor-total"></strong></div>
+      </div>
       <p class="muted">Prices excl. BTW. Time accepts "5h 25m", "5:25" or minutes.</p>`;
 
     this.refreshTotals();
@@ -96,8 +99,11 @@ PPC.editor = {
   refreshTotals() {
     const { settings, filaments } = PPC.store.state;
     const quote = PPC.store.currentQuote();
-    const results = PPC.calc.quote(quote, settings, filaments).lines;
+    const quoteResult = PPC.calc.quote(quote, settings, filaments);
+    const results = quoteResult.lines;
     const money = PPC.format.money.bind(PPC.format);
+
+    this.root.querySelector('#editor-total').textContent = money(quoteResult.total);
 
     this.root.querySelectorAll('tr[data-line]').forEach((row, i) => {
       const line = quote.lines[i];
