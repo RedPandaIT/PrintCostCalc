@@ -3,7 +3,7 @@
 //   power cost    = minutes * printer kW * price per kWh / 60
 //   wear cost     = minutes / 60 * wear per hour (printer depreciation, nozzles, upkeep)
 //   material cost = grams * (filament price per kg / 1000) * (1 + waste %)
-//   price each    = (power + wear + material) * (1 + margin %)
+//   price each    = (power + wear + material) * (1 + markup %)
 //   line total    = price each * amount
 //   quote total   = subtotal + BTW
 // The settings and filament prices come from each quote's own snapshot.
@@ -52,7 +52,7 @@ PPC.calc = {
     const materialCost = baseMaterialCost * wasteFactor; // material including the waste buffer
     const wasteCost = materialCost - baseMaterialCost;
     const cost = powerCost + wearCost + materialCost;
-    const priceEach = cost * (1 + (settings.marginPercent || 0) / 100);
+    const priceEach = cost * (1 + (settings.markupPercent || 0) / 100);
 
     return {
       minutes,
@@ -64,7 +64,7 @@ PPC.calc = {
       baseMaterialCost, // filament only, no waste buffer
       wasteCost, // the waste buffer on top of the material
       overheadCost: wearCost + wasteCost, // machine wear + waste: costs that aren't material or power
-      marginCost: priceEach - cost, // what the margin adds
+      markupCost: priceEach - cost, // what the markup adds
       materialCost,
       cost,
       priceEach,

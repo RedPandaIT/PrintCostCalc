@@ -14,7 +14,7 @@ PPC.settings = {
       label: 'Waste & failed prints',
       unit: '% extra material',
     },
-    { key: 'marginPercent', label: 'Margin', unit: '% on top of cost' },
+    { key: 'markupPercent', label: 'Markup', unit: '% on top of cost' },
     { key: 'vatPercent', label: 'VAT', unit: '%' },
   ],
 

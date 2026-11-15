@@ -2,7 +2,7 @@
 //
 //   {
 //     settings:       { pricePerKwh, printerKw, wearPerHour, printerCost, payoffHours,
-//                       wastePercent, marginPercent, vatPercent },
+//                       wastePercent, markupPercent, vatPercent },
 //     filaments:      [ { id, name, pricePerKg } ],
 //     quotes:         [ { id, name, createdAt, sentAt, showBreakdown, lines: [...], pricing } ],
 //     currentQuoteId: id of the quote being edited
@@ -39,7 +39,7 @@ PPC.store = {
         printerCost: 0,
         payoffHours: 0,
         wastePercent: 10,
-        marginPercent: 40,
+        markupPercent: 40,
         vatPercent: 21,
       },
       filaments: [{ id: this.uid(), name: 'PLA', pricePerKg: 13.99 }],
@@ -48,13 +48,15 @@ PPC.store = {
     };
   },
 
-  // Old data stored the margin as a multiplier (`margin: 1.4`). It is now a
-  // percentage (`marginPercent: 40`). Convert before defaults are filled in.
+  // Old data used other names for the markup: a multiplier (`margin: 1.4`), and
+  // later a percentage called `marginPercent: 40`. Both are now `markupPercent: 40`.
+  // Convert before defaults are filled in.
   upgradeSettings(settings) {
-    if (!settings || settings.margin === undefined) return settings;
-    const { margin, ...rest } = settings;
-    if (rest.marginPercent === undefined) {
-      rest.marginPercent = Number(((margin - 1) * 100).toFixed(4));
+    if (!settings) return settings;
+    const { margin, marginPercent, ...rest } = settings;
+    if (rest.markupPercent === undefined) {
+      if (marginPercent !== undefined) rest.markupPercent = marginPercent;
+      else if (margin !== undefined) rest.markupPercent = Number(((margin - 1) * 100).toFixed(4));
     }
     return rest;
   },
