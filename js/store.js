@@ -28,18 +28,30 @@ PPC.store = {
     };
   },
 
-  load() {
+  // Fills in anything missing from saved data (used for local storage and backups).
+  normalize(saved) {
     const defaults = this.defaults();
+    if (!saved) return defaults;
+    return { ...defaults, ...saved, settings: { ...defaults.settings, ...saved.settings } };
+  },
+
+  // Makes sure a quote is open: the newest one, or a fresh one if there are none.
+  ensureCurrentQuote() {
+    if (this.currentQuote()) return;
+    const newest = this.state.quotes[this.state.quotes.length - 1];
+    if (newest) this.state.currentQuoteId = newest.id;
+    else this.addQuote();
+  },
+
+  load() {
     let saved = null;
     try {
       saved = JSON.parse(localStorage.getItem(this.KEY));
     } catch (e) {
       console.warn('Could not read saved data, starting fresh.', e);
     }
-    this.state = saved
-      ? { ...defaults, ...saved, settings: { ...defaults.settings, ...saved.settings } }
-      : defaults;
-    if (!this.currentQuote()) this.addQuote();
+    this.state = this.normalize(saved);
+    this.ensureCurrentQuote();
   },
 
   save() {
