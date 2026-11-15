@@ -214,10 +214,8 @@ td { padding: 4px 6px; vertical-align: middle; }
 .summary strong {
   font-size: 28px;
   letter-spacing: -0.02em;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  /* Solid color on purpose: gradient-clipped text turns invisible when selected. */
+  color: var(--accent);
 }
 
 /* ---- Settings ---- */
