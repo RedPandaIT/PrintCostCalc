@@ -102,6 +102,7 @@ var PPC = window.PPC || {};
           <thead><tr>${head}</tr></thead>
           <tbody>${body}</tbody>
           <tfoot>
+            ${result.fee ? footRow('Labour / setup fee', result.fee) : ''}
             ${footRow('Subtotal (excl. BTW)', result.subtotal)}
             ${footRow('BTW ' + settings.vatPercent + '%', result.vat)}
             ${footRow('Total incl. BTW', result.total, 'grand')}

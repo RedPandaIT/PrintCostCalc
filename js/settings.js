@@ -15,6 +15,7 @@ PPC.settings = {
       unit: '% extra material',
     },
     { key: 'markupPercent', label: 'Markup', unit: '% on top of cost' },
+    { key: 'labourFee', label: 'Labour / setup fee', unit: '€ for each new quote' },
     { key: 'vatPercent', label: 'VAT', unit: '%' },
   ],
 

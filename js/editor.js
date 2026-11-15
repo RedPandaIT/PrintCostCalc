@@ -111,6 +111,9 @@ PPC.editor = {
         <button data-action="add-line">+ Add line</button>
         <div class="summary"><span>Total incl. BTW</span><strong id="editor-total"></strong></div>
       </div>
+      <label class="field fee">Labour / setup fee (€, once per quote, excl. BTW)
+        <input data-field="fee" class="narrow" inputmode="decimal" value="${esc(quote.fee)}" placeholder="0">
+      </label>
       <p class="muted">Prices excl. BTW. Time accepts "5h 25m", "5:25" or minutes.</p>`;
 
     this.refreshTotals();
