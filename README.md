@@ -9,6 +9,12 @@ customer. See `vision.md` for the idea behind it.
 Open `index.html` in a browser. There is no build step and no server. Data is
 stored in the browser's local storage (key `ppc.v1`).
 
+## Hosting
+
+Published with GitHub Pages by `.github/workflows/pages.yml`: every push to
+`main` deploys `index.html`, `css/` and `js/`. Your data stays in each
+visitor's own browser, so the hosted page starts empty for everyone.
+
 ## Code layout
 
 ```
