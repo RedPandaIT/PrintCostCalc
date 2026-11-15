@@ -13,6 +13,7 @@ PPC.app = {
     PPC.editor.init();
     PPC.output.init();
     PPC.settings.init();
+    PPC.backup.init();
     PPC.theme.initToggle();
 
     document.getElementById('new-quote').addEventListener('click', () => this.newQuote());

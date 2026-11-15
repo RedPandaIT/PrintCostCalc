@@ -34,6 +34,14 @@
         <button id="new-quote" class="primary">+ New quote</button>
         <h2>History</h2>
         <ul id="history" class="history"></ul>
+
+        <h2>Backup</h2>
+        <div class="backup">
+          <button id="backup-download">Download backup</button>
+          <button id="backup-restore">Restore from file…</button>
+          <input type="file" id="backup-file" accept=".json,application/json" hidden>
+          <p id="backup-status" class="muted" role="status"></p>
+        </div>
       </aside>
 
       <main class="main">
@@ -71,6 +79,7 @@
     <script src="js/editor.js"></script>
     <script src="js/output.js"></script>
     <script src="js/history.js"></script>
+    <script src="js/backup.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>
