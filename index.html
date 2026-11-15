@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Print Price Calculator</title>
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <button id="new-quote" class="primary">+ New quote</button>
+        <h2>History</h2>
+        <ul id="history" class="history"></ul>
+      </aside>
+
+      <main class="main">
+        <h1>Print Price Calculator</h1>
+
+        <section class="panel">
+          <h2>Quote</h2>
+          <div id="editor"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Customer quote</h2>
+            <label class="toggle"><input type="checkbox" id="show-breakdown"> Full breakdown</label>
+            <button id="copy-quote">Copy quote</button>
+          </div>
+          <div id="quote-output" class="quote"></div>
+        </section>
+
+        <details class="panel">
+          <summary>Settings &amp; filaments</summary>
+          <div id="settings"></div>
+        </details>
+      </main>
+    </div>
+
+    <!-- Plain scripts (not ES modules) so the page also works when opened
+         straight from disk. Order matters: each file uses the ones above it. -->
+    <script src="js/format.js"></script>
+    <script src="js/calc.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/output.js"></script>
+    <script src="js/history.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
