@@ -294,6 +294,22 @@ td { padding: 4px 6px; vertical-align: middle; }
 .quote tfoot tr:first-child td { border-top: 2px solid var(--text); padding-top: 10px; }
 .quote .grand td { font-weight: 700; font-size: 18px; padding-top: 10px; color: var(--accent); }
 
+/* Full breakdown: a small box with the cost parts of one line */
+.quote .breakdown-box {
+  display: inline-block;
+  min-width: 170px;
+  padding: 6px 10px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+}
+.quote .breakdown-info { margin-bottom: 3px; color: var(--muted); }
+.quote table.breakdown { width: 100%; }
+.quote table.breakdown tr { background: none; }
+.quote table.breakdown td { padding: 1px 0; border: none; }
+.quote table.breakdown td:first-child { padding-right: 16px; color: var(--muted); }
+
 /* ---- Small screens ---- */
 @media (max-width: 760px) {
   .layout { flex-direction: column; }

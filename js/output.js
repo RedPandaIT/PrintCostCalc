@@ -13,20 +13,35 @@ var PPC = window.PPC || {};
     { head: 'Total', num: true, cell: (r) => f.money(r.total) },
   ];
 
+  // Full breakdown: the same columns, plus one "Breakdown" cell that holds a small
+  // table with what the price each is made of:
+  //   Material + Power + Overhead + Markup (+ Handling) = Price each
+  // `html: true` means the cell is built here and is already escaped.
+  function breakdownCell(r) {
+    const rows = [
+      ['Material', r.baseMaterialCost],
+      ['Power', r.powerCost],
+      ['Overhead', r.overheadCost],
+      ['Markup', r.markupCost],
+    ];
+    if (r.handlingCost) rows.push(['Handling', r.handlingCost]);
+
+    const info = [r.filament && r.filament.name, f.duration(r.minutes), r.grams ? r.grams + ' g' : '']
+      .filter(Boolean)
+      .map(f.esc)
+      .join(' · ');
+    const body = rows
+      .map(([label, value]) => `<tr><td>${label}</td><td class="num">${f.money(value)}</td></tr>`)
+      .join('');
+    return `<div class="breakdown-box"><div class="breakdown-info">${info}</div><table class="breakdown"><tbody>${body}</tbody></table></div>`;
+  }
+
   const FULL_COLUMNS = [
-    { head: 'Model', cell: (r, l) => l.model || '(unnamed)' },
-    { head: 'Amount', num: true, cell: (r) => r.amount },
-    { head: 'Filament', cell: (r) => (r.filament ? r.filament.name : '') },
-    { head: 'Time', num: true, cell: (r) => f.duration(r.minutes) },
-    { head: 'Grams', num: true, cell: (r) => r.grams },
-    // Material + Power + Overhead + Markup + Handling = Price each
-    { head: 'Material', num: true, cell: (r) => f.money(r.baseMaterialCost) },
-    { head: 'Power', num: true, cell: (r) => f.money(r.powerCost) },
-    { head: 'Overhead', num: true, cell: (r) => f.money(r.overheadCost) },
-    { head: 'Markup', num: true, cell: (r) => f.money(r.markupCost) },
-    { head: 'Handling', num: true, cell: (r) => f.money(r.handlingCost) },
-    { head: 'Price each', num: true, cell: (r) => f.money(r.priceEach) },
-    { head: 'Total', num: true, cell: (r) => f.money(r.total) },
+    SIMPLE_COLUMNS[0],
+    SIMPLE_COLUMNS[1],
+    { head: 'Breakdown', html: true, cell: (r) => breakdownCell(r) },
+    SIMPLE_COLUMNS[2],
+    SIMPLE_COLUMNS[3],
   ];
 
   PPC.output = {
@@ -84,7 +99,7 @@ var PPC = window.PPC || {};
           ({ r, line }) =>
             '<tr>' +
             columns
-              .map((c) => `<td${c.num ? ' class="num"' : ''}>${f.esc(c.cell(r, line))}</td>`)
+              .map((c) => `<td${c.num ? ' class="num"' : ''}>${c.html ? c.cell(r, line) : f.esc(c.cell(r, line))}</td>`)
               .join('') +
             '</tr>'
         )
