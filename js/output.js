@@ -19,9 +19,11 @@ var PPC = window.PPC || {};
     { head: 'Filament', cell: (r) => (r.filament ? r.filament.name : '') },
     { head: 'Time', num: true, cell: (r) => f.duration(r.minutes) },
     { head: 'Grams', num: true, cell: (r) => r.grams },
-    { head: 'Material', num: true, cell: (r) => f.money(r.materialCost) },
+    // Material + Power + Overhead + Margin = Price each
+    { head: 'Material', num: true, cell: (r) => f.money(r.baseMaterialCost) },
     { head: 'Power', num: true, cell: (r) => f.money(r.powerCost) },
-    { head: 'Wear', num: true, cell: (r) => f.money(r.wearCost) },
+    { head: 'Overhead', num: true, cell: (r) => f.money(r.overheadCost) },
+    { head: 'Margin', num: true, cell: (r) => f.money(r.marginCost) },
     { head: 'Price each', num: true, cell: (r) => f.money(r.priceEach) },
     { head: 'Total', num: true, cell: (r) => f.money(r.total) },
   ];

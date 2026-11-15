@@ -48,7 +48,9 @@ PPC.calc = {
     const wearCost = (minutes / 60) * (settings.wearPerHour || 0);
     // The waste buffer covers failed prints, purge and supports.
     const wasteFactor = 1 + (settings.wastePercent || 0) / 100;
-    const materialCost = filament ? ((grams * filament.pricePerKg) / 1000) * wasteFactor : 0;
+    const baseMaterialCost = filament ? (grams * filament.pricePerKg) / 1000 : 0;
+    const materialCost = baseMaterialCost * wasteFactor; // material including the waste buffer
+    const wasteCost = materialCost - baseMaterialCost;
     const cost = powerCost + wearCost + materialCost;
     const priceEach = cost * (1 + (settings.marginPercent || 0) / 100);
 
@@ -59,6 +61,10 @@ PPC.calc = {
       filament,
       powerCost,
       wearCost,
+      baseMaterialCost, // filament only, no waste buffer
+      wasteCost, // the waste buffer on top of the material
+      overheadCost: wearCost + wasteCost, // machine wear + waste: costs that aren't material or power
+      marginCost: priceEach - cost, // what the margin adds
       materialCost,
       cost,
       priceEach,
