@@ -20,7 +20,8 @@ Personal tool, single user.
   - material cost = grams × filament price per gram
   - cost per piece = power + wear + material
   - price per piece = cost per piece × (1 + markup %)
-  - line total = price per piece × amount, plus BTW
+  - line total = price per piece × amount
+  - quote total = sum of line totals + an optional labour / setup fee per quote (no markup on it), plus BTW
 - **Quote output** that is easy to copy or screenshot. A toggle switches between:
   - *Prices only* (model, amount, price per piece, total incl. BTW), with costs and markup hidden
   - *Full breakdown* (also shows material, power and time costs)

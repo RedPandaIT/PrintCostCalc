@@ -25,5 +25,6 @@ wear cost     = hours × machine wear per hour
 material cost = grams × filament price per kg ÷ 1000 × (1 + waste %)
 price each    = (power + wear + material) × (1 + markup %)
 line total    = price each × amount
-quote total   = sum of line totals + BTW
+subtotal      = sum of line totals + labour / setup fee
+quote total   = subtotal + BTW
 ```
