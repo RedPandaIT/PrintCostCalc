@@ -23,8 +23,8 @@ visitor's own browser, so the hosted page starts empty for everyone.
 power cost    = minutes × printer kW × price per kWh ÷ 60
 wear cost     = hours × machine wear per hour
 material cost = grams × filament price per kg ÷ 1000 × (1 + waste %)
-price each    = (power + wear + material) × (1 + markup %)
+price each    = (power + wear + material) × (1 + markup %) + handling fee per piece
 line total    = price each × amount
-subtotal      = sum of line totals + labour / setup fee
+subtotal      = sum of line totals + handling fee for the whole order
 quote total   = subtotal + BTW
 ```

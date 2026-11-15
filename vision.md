@@ -19,9 +19,9 @@ Personal tool, single user.
   - power cost = time × (power × price per kWh / 60)
   - material cost = grams × filament price per gram
   - cost per piece = power + wear + material
-  - price per piece = cost per piece × (1 + markup %)
+  - price per piece = cost per piece × (1 + markup %) + an optional handling fee per piece (e.g. magnets), no markup on it
   - line total = price per piece × amount
-  - quote total = sum of line totals + an optional labour / setup fee per quote (no markup on it), plus BTW
+  - quote total = sum of line totals + an optional handling fee for the whole order (no markup on it), plus BTW
 - **Quote output** that is easy to copy or screenshot. A toggle switches between:
   - *Prices only* (model, amount, price per piece, total incl. BTW), with costs and markup hidden
   - *Full breakdown* (also shows material, power and time costs)
