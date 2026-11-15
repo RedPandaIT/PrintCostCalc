@@ -42,12 +42,16 @@ PPC.app = {
   },
 
   newQuote() {
-    // Don't pile up empty quotes: reuse the open one if it is still blank.
-    if (!PPC.store.isBlank(PPC.store.currentQuote())) {
+    // Don't pile up empty quotes: reuse the open one if it is still blank. A blank
+    // quote has nothing to protect, so it picks up the current prices.
+    const current = PPC.store.currentQuote();
+    if (PPC.store.isBlank(current)) {
+      PPC.store.recalculate(current);
+    } else {
       PPC.store.addQuote();
-      PPC.store.save();
-      this.renderAll();
     }
+    PPC.store.save();
+    this.renderAll();
     document.querySelector('#editor input').focus();
   },
 
