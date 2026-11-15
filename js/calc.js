@@ -2,7 +2,7 @@
 // Same logic as the original spreadsheet:
 //   power cost    = minutes * printer kW * price per kWh / 60
 //   material cost = grams * (filament price per kg / 1000) * (1 + waste %)
-//   price each    = (power + material) * margin
+//   price each    = (power + material) * (1 + margin %)
 //   line total    = price each * amount
 //   quote total   = subtotal + BTW
 // The settings and filament prices come from each quote's own snapshot.
@@ -48,7 +48,7 @@ PPC.calc = {
     const wasteFactor = 1 + (settings.wastePercent || 0) / 100;
     const materialCost = filament ? ((grams * filament.pricePerKg) / 1000) * wasteFactor : 0;
     const cost = powerCost + materialCost;
-    const priceEach = cost * settings.margin;
+    const priceEach = cost * (1 + (settings.marginPercent || 0) / 100);
 
     return {
       minutes,

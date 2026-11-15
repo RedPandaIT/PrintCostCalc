@@ -1,7 +1,7 @@
 // App data + local storage. Owns PPC.store.state, the single source of truth:
 //
 //   {
-//     settings:       { pricePerKwh, printerKw, wastePercent, margin, vatPercent },
+//     settings:       { pricePerKwh, printerKw, wastePercent, marginPercent, vatPercent },
 //     filaments:      [ { id, name, pricePerKg } ],
 //     quotes:         [ { id, name, createdAt, showBreakdown, lines: [...], pricing } ],
 //     currentQuoteId: id of the quote being edited
@@ -26,25 +26,38 @@ PPC.store = {
 
   defaults() {
     return {
-      settings: { pricePerKwh: 0.3, printerKw: 0.15, wastePercent: 10, margin: 1.4, vatPercent: 21 },
+      settings: { pricePerKwh: 0.3, printerKw: 0.15, wastePercent: 10, marginPercent: 40, vatPercent: 21 },
       filaments: [{ id: this.uid(), name: 'PLA', pricePerKg: 13.99 }],
       quotes: [],
       currentQuoteId: null,
     };
   },
 
+  // Old data stored the margin as a multiplier (`margin: 1.4`). It is now a
+  // percentage (`marginPercent: 40`). Convert before defaults are filled in.
+  upgradeSettings(settings) {
+    if (!settings || settings.margin === undefined) return settings;
+    const { margin, ...rest } = settings;
+    if (rest.marginPercent === undefined) {
+      rest.marginPercent = Number(((margin - 1) * 100).toFixed(4));
+    }
+    return rest;
+  },
+
   // Fills in anything missing from saved data (used for local storage and backups).
   normalize(saved) {
     const defaults = this.defaults();
     if (!saved) return defaults;
-    const state = { ...defaults, ...saved, settings: { ...defaults.settings, ...saved.settings } };
+    const savedSettings = this.upgradeSettings(saved.settings);
+    const state = { ...defaults, ...saved, settings: { ...defaults.settings, ...savedSettings } };
 
     // Quotes saved before pricing snapshots existed get one from the current prices.
     // A saved quote without a waste buffer was made before that setting existed,
     // so it gets 0% (its total must not change); only new quotes get the default.
     state.quotes.forEach((quote) => {
       if (this.isValidPricing(quote.pricing)) {
-        quote.pricing.settings = { ...defaults.settings, wastePercent: 0, ...quote.pricing.settings };
+        const frozen = this.upgradeSettings(quote.pricing.settings);
+        quote.pricing.settings = { ...defaults.settings, wastePercent: 0, ...frozen };
       } else {
         quote.pricing = { ...this.snapshotPricing(state), at: quote.createdAt };
         quote.pricing.settings.wastePercent = 0;
