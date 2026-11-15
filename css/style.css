@@ -8,7 +8,26 @@
   --accent: #2f6fed;
   --accent-text: #ffffff;
   --danger: #d33a3a;
+  --input-bg: #ffffff;
+  --active-bg: #e8effd;
+  --invalid-bg: #fdf0f0;
   --radius: 6px;
+  color-scheme: light;
+}
+
+/* Dark theme: theme.js sets data-theme on <html> */
+:root[data-theme="dark"] {
+  --bg: #15171c;
+  --panel: #1e2128;
+  --text: #e6e8ee;
+  --muted: #98a0ae;
+  --border: #353a45;
+  --accent: #4f86f7;
+  --danger: #ef6b6b;
+  --input-bg: #14161b;
+  --active-bg: #27324a;
+  --invalid-bg: #3a2326;
+  color-scheme: dark;
 }
 
 /* ---- Base ---- */
@@ -21,7 +40,8 @@ body {
   font: 15px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-h1 { margin: 0 0 16px; font-size: 22px; }
+h1 { margin: 0; font-size: 22px; }
+.top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 h2 { margin: 0 0 12px; font-size: 16px; }
 h3 { margin: 16px 0 8px; font-size: 14px; }
 
@@ -33,12 +53,12 @@ input, select, button {
   padding: 6px 8px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: #fff;
+  background: var(--input-bg);
 }
 
 input, select { width: 100%; }
 input.narrow { width: 90px; }
-input.invalid, select.invalid { border-color: var(--danger); background: #fdf0f0; }
+input.invalid, select.invalid { border-color: var(--danger); background: var(--invalid-bg); }
 
 button { cursor: pointer; }
 button:hover { border-color: var(--accent); }
@@ -82,7 +102,7 @@ summary { cursor: pointer; font-weight: 600; }
 /* ---- History ---- */
 .history { list-style: none; margin: 0; padding: 0; }
 .history-item { display: flex; align-items: center; border-radius: var(--radius); }
-.history-item.active { background: #e8effd; }
+.history-item.active { background: var(--active-bg); }
 .history-open {
   flex: 1;
   min-width: 0;
@@ -110,7 +130,17 @@ td { padding: 4px 6px; vertical-align: middle; }
 .filaments { max-width: 480px; margin-bottom: 12px; }
 
 /* ---- Customer quote (made to be copied / screenshotted) ---- */
-.quote { border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; background: #fff; }
+.quote {
+  /* Always light, so screenshots look the same in either theme. */
+  --text: #1f2430;
+  --muted: #6b7280;
+  --border: #d9dce3;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  background: #fff;
+}
 .quote .quote-title { margin: 0; font-size: 18px; }
 .quote p { margin: 2px 0 12px; }
 .quote th, .quote td { padding: 6px 8px; border-bottom: 1px solid var(--border); }
