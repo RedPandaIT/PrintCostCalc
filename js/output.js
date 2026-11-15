@@ -32,7 +32,14 @@ var PPC = window.PPC || {};
     init() {
       this.root = document.getElementById('quote-output');
       this.toggle = document.getElementById('show-breakdown');
+      this.sentToggle = document.getElementById('mark-sent');
       const copyButton = document.getElementById('copy-quote');
+
+      this.sentToggle.addEventListener('change', () => {
+        PPC.store.setSent(PPC.store.currentQuote(), this.sentToggle.checked);
+        PPC.app.update();
+        PPC.editor.render();
+      });
 
       this.toggle.addEventListener('change', () => {
         PPC.store.currentQuote().showBreakdown = this.toggle.checked;
@@ -52,6 +59,7 @@ var PPC = window.PPC || {};
       const result = PPC.calc.quote(quote);
 
       this.toggle.checked = quote.showBreakdown;
+      this.sentToggle.checked = PPC.store.isSent(quote);
 
       // Skip lines that are still completely empty.
       const rows = result.lines

@@ -91,7 +91,7 @@ PPC.editor = {
 
     this.root.innerHTML = `
       <div class="notice" id="pricing-notice" hidden>
-        <span>This quote uses the prices from <strong id="pricing-date"></strong>, which differ
+        <span>This quote was sent with the prices from <strong id="pricing-date"></strong>, which differ
           from your current settings.</span>
         <button data-action="recalculate">Recalculate with current prices</button>
       </div>
