@@ -3,9 +3,9 @@
 //   power cost    = minutes * printer kW * price per kWh / 60
 //   wear cost     = minutes / 60 * wear per hour (printer depreciation, nozzles, upkeep)
 //   material cost = grams * (filament price per kg / 1000) * (1 + waste %)
-//   price each    = (power + wear + material) * (1 + markup %)
+//   price each    = (power + wear + material) * (1 + markup %) + handling fee per piece
 //   line total    = price each * amount
-//   subtotal      = sum of line totals + labour / setup fee (a fixed fee, no markup)
+//   subtotal      = sum of line totals + handling fee for the whole order (no markup)
 //   quote total   = subtotal + BTW
 // The settings and filament prices come from each quote's own snapshot.
 var PPC = window.PPC || {};
@@ -53,7 +53,8 @@ PPC.calc = {
     const materialCost = baseMaterialCost * wasteFactor; // material including the waste buffer
     const wasteCost = materialCost - baseMaterialCost;
     const cost = powerCost + wearCost + materialCost;
-    const priceEach = cost * (1 + (settings.markupPercent || 0) / 100);
+    const handlingCost = this.num(line.handling); // fixed fee per piece, no markup
+    const priceEach = cost * (1 + (settings.markupPercent || 0) / 100) + handlingCost;
 
     return {
       minutes,
@@ -65,7 +66,8 @@ PPC.calc = {
       baseMaterialCost, // filament only, no waste buffer
       wasteCost, // the waste buffer on top of the material
       overheadCost: wearCost + wasteCost, // machine wear + waste: costs that aren't material or power
-      markupCost: priceEach - cost, // what the markup adds
+      handlingCost,
+      markupCost: priceEach - cost - handlingCost, // what the markup adds
       materialCost,
       cost,
       priceEach,
@@ -81,7 +83,7 @@ PPC.calc = {
       const filament = filaments.find((f) => f.id === line.filamentId);
       return this.line(line, settings, filament);
     });
-    const fee = this.num(quote.fee);
+    const fee = this.num(quote.handlingFee);
     const subtotal = lines.reduce((sum, l) => sum + l.total, 0) + fee;
     const vat = (subtotal * settings.vatPercent) / 100;
     return { lines, fee, subtotal, vat, total: subtotal + vat };

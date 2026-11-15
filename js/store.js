@@ -2,13 +2,14 @@
 //
 //   {
 //     settings:       { pricePerKwh, printerKw, wearPerHour, printerCost, payoffHours,
-//                       wastePercent, markupPercent, labourFee, vatPercent },
+//                       wastePercent, markupPercent, vatPercent },
 //     filaments:      [ { id, name, pricePerKg } ],
-//     quotes:         [ { id, name, createdAt, sentAt, fee, showBreakdown, lines: [...], pricing } ],
+//     quotes:         [ { id, name, createdAt, sentAt, handlingFee, showBreakdown, lines: [...], pricing } ],
 //     currentQuoteId: id of the quote being edited
 //   }
 //
-// A quote line is { id, model, amount, time, grams, filamentId }. Values typed
+// A quote line is { id, model, amount, time, grams, filamentId, handling } where
+// `handling` is an extra fee per piece (e.g. magnets to add). Values typed
 // by the user are kept as strings; PPC.calc turns them into numbers.
 //
 // Each quote has its own `pricing` snapshot { at, settings, filaments }: a copy
@@ -24,9 +25,7 @@ var PPC = window.PPC || {};
 PPC.store = {
   KEY: 'ppc.v1',
   state: null,
-  // Settings that don't change a price by themselves (so no "prices differ" banner):
-  // the wear helpers, and the default for a new quote's labour / setup fee.
-  HELPER_KEYS: ['printerCost', 'payoffHours', 'labourFee'],
+  HELPER_KEYS: ['printerCost', 'payoffHours'],
 
   uid() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -42,7 +41,6 @@ PPC.store = {
         payoffHours: 0,
         wastePercent: 10,
         markupPercent: 40,
-        labourFee: 0,
         vatPercent: 21,
       },
       filaments: [{ id: this.uid(), name: 'PLA', pricePerKg: 13.99 }],
@@ -56,7 +54,7 @@ PPC.store = {
   // Convert before defaults are filled in.
   upgradeSettings(settings) {
     if (!settings) return settings;
-    const { margin, marginPercent, ...rest } = settings;
+    const { margin, marginPercent, labourFee, ...rest } = settings; // labourFee: dropped idea
     if (rest.markupPercent === undefined) {
       if (marginPercent !== undefined) rest.markupPercent = marginPercent;
       else if (margin !== undefined) rest.markupPercent = Number(((margin - 1) * 100).toFixed(4));
@@ -130,6 +128,7 @@ PPC.store = {
       amount: '1',
       time: '',
       grams: '',
+      handling: '',
       filamentId: previousLine ? previousLine.filamentId : firstFilament ? firstFilament.id : '',
     };
   },
@@ -140,7 +139,7 @@ PPC.store = {
       name: '',
       createdAt: new Date().toISOString(),
       sentAt: null,
-      fee: String(this.state.settings.labourFee || ''), // labour / setup fee, starts at the default
+      handlingFee: '', // one handling fee for the whole order (shipping, labelling, ...)
       showBreakdown: false,
       lines: [this.newLine(null)],
       pricing: this.snapshotPricing(),
