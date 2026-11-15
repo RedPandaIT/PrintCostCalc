@@ -14,11 +14,11 @@ Personal tool, single user.
 ## Core features
 - **Quote with multiple lines.** Each line: model name, amount, print time, grams, filament.
 - **Filament list.** A saved list of filaments (name + price/kg), picked from a dropdown per line.
-- **Settings** (saved in local storage): electricity price (per kWh), printer power (kWh), margin, BTW rate (default 21%).
+- **Settings** (saved in local storage): electricity price (per kWh), printer power (kWh), machine wear (per print hour, with an optional printer price and pay-off time to suggest it), waste %, margin, BTW rate (default 21%).
 - **Cost calculation** per line, following the spreadsheet logic:
   - power cost = time × (power × price per kWh / 60)
   - material cost = grams × filament price per gram
-  - cost per piece = power + material
+  - cost per piece = power + wear + material
   - price per piece = cost per piece × (1 + margin %)
   - line total = price per piece × amount, plus BTW
 - **Quote output** that is easy to copy or screenshot. A toggle switches between:
